@@ -12,9 +12,9 @@ public class ProcessingPrimaryData {
 	private Set <Edge> edges = new HashSet<Edge>();
 	private Set <Vertice> vertices = new HashSet<Vertice>();
 
-	public ProcessingPrimaryData() throws IOException {
+	public ProcessingPrimaryData(String filename) throws IOException {
 			
-		File infile = new File("tmp/data_sample"); 
+		File infile = new File(filename);
 		FileReader fr = new FileReader(infile);
 		BufferedReader br = new BufferedReader(fr);
 

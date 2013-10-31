@@ -11,16 +11,16 @@ public class DepthFirstSearch {
 	
 	private Stack<Vertice> st;
 	private Set<String> visitedNodes;
+	private Vertice Vstart;
 	
-	public DepthFirstSearch(Set<Vertice> vertices, Set<Edge> edges){
+	public DepthFirstSearch(Set<Vertice> vertices, Set<Edge> edges, Vertice Vstart){
 		this.edges = edges;
 		this.vertices = vertices;
+		this.Vstart = Vstart;
 		
 	}
 	
 	public void dfs(){
-		
-		Vertice Vstart = vertices.iterator().next();
 		
 		st = new Stack<Vertice>();
 		visitedNodes = new HashSet<String>();
@@ -30,7 +30,6 @@ public class DepthFirstSearch {
 		
 		while( ! st.isEmpty()){
 			Vertice currentV = st.peek();
-			//System.out.println(currentV);
 			
 			Integer flage = 1;
 		
