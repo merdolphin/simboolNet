@@ -7,15 +7,14 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProcessingGraph {
+public class ProcessingPrimaryData {
+	
+	private Set <Edge> edges = new HashSet<Edge>();
+	private Set <Vertice> vertices = new HashSet<Vertice>();
 
-	public ProcessingGraph() throws IOException {
-		
-
-		Set <Edge> edges = new HashSet<Edge>();
-		Set <Vertice> vertices = new HashSet<Vertice>();
-		
-		File infile = new File("data_sample"); 
+	public ProcessingPrimaryData() throws IOException {
+			
+		File infile = new File("tmp/data_sample"); 
 		FileReader fr = new FileReader(infile);
 		BufferedReader br = new BufferedReader(fr);
 
@@ -58,8 +57,14 @@ public class ProcessingGraph {
 			
 		}
 		fr.close();
-		
-		DepthFirstSearch search = new DepthFirstSearch(vertices, edges);
-		search.dfs();
+
+	}
+
+	public Set<Edge> getEdges() {
+		return edges;
+	}
+
+	public Set<Vertice> getVertices() {
+		return vertices;
 	}
 }
