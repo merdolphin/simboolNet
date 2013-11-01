@@ -36,16 +36,25 @@ public class BreadthFirstSearch {
 		
 		visitedNodes.add(Vstart.getName());
 		
-		for(String s : Vstart.getAdjacentV()){
-			qe.add(nodeVertices.get(s));
-		}
+		visitingMarkedQueue(Vstart);
 		
 		
 		while( ! qe.isEmpty()){
-			System.out.println(qe.size());
-			qe.poll();
+			
+			Vertice currentV = qe.remove();
+			visitingMarkedQueue(currentV);
 		}
-		
+				
 	}
-
+	
+	public void visitingMarkedQueue (Vertice V){
+		
+		for(String s : V.getAdjacentV()){
+			if( ! visitedNodes.contains(s) ){
+				qe.add(nodeVertices.get(s));
+				visitedNodes.add(s);
+			}
+		}
+	}
+	
 }

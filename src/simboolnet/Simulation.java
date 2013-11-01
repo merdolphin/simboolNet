@@ -11,39 +11,35 @@ import java.util.Set;
 
 public class Simulation {
 	
-
+	Integer interationTimes = 100;
 	
-
-	public static void main(String[] args) throws Exception {
+	static Set <Edge> edges;
+	static Set <Vertice> vertices;
+	static Set <String> receptors;
+	
+	static Double nodeInitSignal = 0.0; 
+	Double edgeInitWeight = 0.8;
+	
+	static Map<String, Vertice> nodeVertices = new HashMap<String, Vertice>();
+	
+	static Map<Vertice, Double> nodeSignal = new HashMap<Vertice, Double>();
+	
 		
-		Set <Edge> edges = new HashSet<Edge>();
-		Set <Vertice> vertices = new HashSet<Vertice>();
-		Set <String> receptors = new HashSet<String>();
-		String startnode = "I";
-		Vertice Vstart = new Vertice(null, null);
-		Integer interationTimes = 100;
+	public static void main(String[] args) throws Exception {
+	
+		
+		/// get the receptors, vertices and edges
+		edges = new HashSet<Edge>();
+		vertices = new HashSet<Vertice>();
+		receptors = new HashSet<String>();
 		
 		ProcessingPrimaryData processing = new ProcessingPrimaryData("tmp/data_sample");
-		 
+	
 		edges = processing.getEdges();
 		vertices = processing.getVertices();
 		
-		for(Vertice v : vertices){
-			if(v.getName().equals(startnode)){
-				Vstart = v;
-				break;
-			}
-		}
-		
-		DepthFirstSearch search = new DepthFirstSearch(vertices, edges, Vstart);
-		search.dfs();
-		
-		BreadthFirstSearch bfSearch = new BreadthFirstSearch(vertices, edges, Vstart);
-		bfSearch.bfs();
-		
-		Map <Vertice, Double> nodeSignal = new HashMap<Vertice, Double>();
-		
-		File receptorFile = new File("tmp/combined_receptors");
+		//File receptorFile = new File("tmp/combined_receptors");
+		File receptorFile = new File("tmp/receptor_sample");
 		FileReader fr = new FileReader(receptorFile);
 		BufferedReader br = new BufferedReader(fr);
 		String line;
@@ -52,6 +48,27 @@ public class Simulation {
 		}
 		
 		
+		/// initiation 
+		
+		for(Vertice v : vertices){		
+			nodeVertices.put(v.getName(), v);
+			nodeSignal.put(v, nodeInitSignal);
+		}
+		
+		
+		for(String startnode : receptors){
+		
+			DepthFirstSearch search = new DepthFirstSearch(vertices, edges, nodeVertices.get(startnode));
+			search.dfs();
+		
+			BreadthFirstSearch bfSearch = new BreadthFirstSearch(vertices, edges, nodeVertices.get(startnode));
+			bfSearch.bfs();
+		}
+		
+	}	
+	
+	public Double updateVertice(Vertice v){
+		return nodeSignal.get(v) ;
 	}
 
 }

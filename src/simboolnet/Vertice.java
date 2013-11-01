@@ -5,18 +5,14 @@ import java.util.Set;
 public class Vertice {
 	String name;
 	Set <String> adjacentV;
+	Set <String> downstreamV;
+	Set <String> upstreamV;
 
-	public Vertice(String name, Set<String> adjacentV){
+	public Vertice(String name, Set<String> adjacentV, Set<String> downstreamV, Set<String> upstreamV){
 		this.name = name;
 		this.adjacentV = adjacentV;
-	}
-	
-	public Set<String> getAdjacentV() {
-		return adjacentV;
-	}
-
-	public void setAdjacentV(Set<String> adjacentV) {
-		this.adjacentV = adjacentV;
+		this.downstreamV = downstreamV;
+		this.upstreamV = upstreamV;
 	}
 
 	public String getName() {
@@ -27,9 +23,28 @@ public class Vertice {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "Vertice [name=" + name + ", adjacentV=" + adjacentV + "]";
+	public Set<String> getAdjacentV() {
+		return adjacentV;
+	}
+
+	public void setAdjacentV(Set<String> adjacentV) {
+		this.adjacentV = adjacentV;
+	}
+
+	public Set<String> getDownstreamV() {
+		return downstreamV;
+	}
+
+	public void setDownstreamV(Set<String> downstreamV) {
+		this.downstreamV = downstreamV;
+	}
+
+	public Set<String> getUpstreamV() {
+		return upstreamV;
+	}
+
+	public void setUpstreamV(Set<String> upstreamV) {
+		this.upstreamV = upstreamV;
 	}
 
 	@Override
@@ -38,7 +53,11 @@ public class Vertice {
 		int result = 1;
 		result = prime * result
 				+ ((adjacentV == null) ? 0 : adjacentV.hashCode());
+		result = prime * result
+				+ ((downstreamV == null) ? 0 : downstreamV.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((upstreamV == null) ? 0 : upstreamV.hashCode());
 		return result;
 	}
 
@@ -56,12 +75,32 @@ public class Vertice {
 				return false;
 		} else if (!adjacentV.equals(other.adjacentV))
 			return false;
+		if (downstreamV == null) {
+			if (other.downstreamV != null)
+				return false;
+		} else if (!downstreamV.equals(other.downstreamV))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (upstreamV == null) {
+			if (other.upstreamV != null)
+				return false;
+		} else if (!upstreamV.equals(other.upstreamV))
+			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Vertice [name=" + name + ", adjacentV=" + adjacentV
+				+ ", downstreamV=" + downstreamV + ", upstreamV=" + upstreamV
+				+ "]";
+	}
+
+
+	
 
 }

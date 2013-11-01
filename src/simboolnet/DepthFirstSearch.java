@@ -41,7 +41,6 @@ public class DepthFirstSearch {
 						if(v.getName().equals(adjacentnode)){
 							st.push(v);
 							visitedNodes.add(adjacentnode);
-							System.out.println(visitedNodes);
 							break;
 						}
 					}
@@ -55,7 +54,7 @@ public class DepthFirstSearch {
 			
 		}
 		
-		System.out.println(visitedNodes);
+		//System.out.println(visitedNodes);
 	}
 
 }
