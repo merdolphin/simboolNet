@@ -4,11 +4,12 @@ import java.util.Set;
 
 public class Vertice {
 	String name;
-	Set <String> adjacentV;
-	Set <String> downstreamV;
-	Set <String> upstreamV;
+	Set<String> adjacentV;
+	Set<String> downstreamV;
+	Set<String> upstreamV;
 
-	public Vertice(String name, Set<String> adjacentV, Set<String> downstreamV, Set<String> upstreamV){
+	public Vertice(String name, Set<String> adjacentV, Set<String> downstreamV,
+			Set<String> upstreamV) {
 		this.name = name;
 		this.adjacentV = adjacentV;
 		this.downstreamV = downstreamV;
@@ -95,11 +96,7 @@ public class Vertice {
 
 	@Override
 	public String toString() {
-		return   name + "\t" + adjacentV
-				+ "\t" + downstreamV + "\t" + upstreamV;
+		return name + "\t" + adjacentV + "\t" + downstreamV + "\t" + upstreamV;
 	}
-
-
-	
 
 }
