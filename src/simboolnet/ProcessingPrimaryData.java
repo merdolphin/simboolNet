@@ -23,7 +23,7 @@ public class ProcessingPrimaryData {
 		String line;
 		
 		while( (line = br.readLine()) != null){
-			Edge edge = new Edge(null, null, 0, null);
+			Edge edge = new Edge(null, null, 0.0, null);
 			String [] temp = line.split(";");
 			edge.setSource(temp[0]);
 			edge.setTarget(temp[1]);
@@ -100,14 +100,8 @@ public class ProcessingPrimaryData {
 //			}
 //			
 //		}
-	
-	
+				
 		mergeV (vertices);
-		
-		for(Vertice v: vertices){
-			System.out.println(v.getName() + "\t" + v.getAdjacentV() + "\t" + v.getDownstreamV() + "\t" + v.getUpstreamV());
-		}
-
 	}
 	
 	public void mergeV (Set<Vertice> v){
@@ -116,8 +110,6 @@ public class ProcessingPrimaryData {
 		
 		for(Vertice v1 : v){
 			if( ! nodes.contains(v1.getName()) ){
-				nodes.add(v1.getName());
-				//System.out.println(nodes);
 				for(Vertice v2 : v){
 					if(v1.getName().equals(v2.getName()) && (! v1.equals(v2)) )
 					{
@@ -129,7 +121,11 @@ public class ProcessingPrimaryData {
 								for(String s22 : v2.getDownstreamV())
 									v1.getDownstreamV().add(s22);
 							}else{
-								v1.setDownstreamV(v2.getDownstreamV());
+								Set<String> v2downV = new HashSet<String>();
+								for(String s23 : v2.getDownstreamV()){
+									v2downV.add(s23);
+								}
+								v1.setDownstreamV(v2downV);
 							}
 						}
 						
@@ -138,16 +134,24 @@ public class ProcessingPrimaryData {
 								for(String s23: v2.getUpstreamV())
 									v1.getUpstreamV().add(s23);
 							}else{
-								v1.setUpstreamV(v2.getUpstreamV());
+								Set<String> v2upV = new HashSet<String>();
+								for(String sv2 : v2.getUpstreamV()){
+									v2upV.add(sv2);
+								}
+								v1.setUpstreamV(v2upV);
 							}
 								
-						
+						nodes.add(v1.getName());	
 						removeV.add(v2);
 					}
 				}
 			}
 		}
-		vertices.removeAll(removeV);
+		
+		for(Vertice v1: removeV){
+			vertices.remove(v1);
+		}
+	
 	}
 
 	public Set<Edge> getEdges() {

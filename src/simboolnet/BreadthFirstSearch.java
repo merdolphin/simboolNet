@@ -1,8 +1,10 @@
 package simboolnet;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -12,9 +14,9 @@ public class BreadthFirstSearch {
 	
 	Set<Edge> edges;
 	Set<Vertice> vertices;
+	List<String> bfsVisitedNodes;
 	
 	private Queue<Vertice> qe;
-	private Set<String> visitedNodes;
 	private Vertice Vstart;
 	
 	Map<String, Vertice> nodeVertices = new HashMap<String, Vertice>();
@@ -23,6 +25,7 @@ public class BreadthFirstSearch {
 		this.edges = edges;
 		this.vertices = vertices;
 		this.Vstart = Vstart;
+		bfs();
 	}
 	
 	public void bfs(){
@@ -32,9 +35,9 @@ public class BreadthFirstSearch {
 		}
 		
 		qe = new LinkedList<Vertice>();
-		visitedNodes = new HashSet<String>();
+		bfsVisitedNodes = new ArrayList<String>();		
 		
-		visitedNodes.add(Vstart.getName());
+		bfsVisitedNodes.add(Vstart.getName());
 		
 		visitingMarkedQueue(Vstart);
 		
@@ -43,18 +46,20 @@ public class BreadthFirstSearch {
 			
 			Vertice currentV = qe.remove();
 			visitingMarkedQueue(currentV);
-		}
-				
+		}	
 	}
-	
+
 	public void visitingMarkedQueue (Vertice V){
 		
 		for(String s : V.getAdjacentV()){
-			if( ! visitedNodes.contains(s) ){
+			if( ! bfsVisitedNodes.contains(s) ){
 				qe.add(nodeVertices.get(s));
-				visitedNodes.add(s);
+				bfsVisitedNodes.add(s);
 			}
 		}
 	}
-	
+
+	public List<String> getBfsVisitedNodes() {
+		return bfsVisitedNodes;
+	}	
 }

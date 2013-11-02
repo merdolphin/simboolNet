@@ -4,49 +4,65 @@ package simboolnet;
 public class Edge {
 	String source;
 	String target;
-	float weight;
+	Double weight;
 	String attr;
 	
-	public Edge(String source, String target, float weight, String attr){
+	public Edge(String source, String target, Double weight, String attr){
 		this.source = source;
 		this.target = target;
 		this.weight = weight;
 		this.attr = attr;
 	}
 
-	public String getAttr() {
-		return attr;
-	}
 
-	public void setAttr(String attr) {
-		this.attr = attr;
-	}
 
 	public String getSource() {
 		return source;
 	}
 
+
+
 	public void setSource(String source) {
 		this.source = source;
 	}
+
+
 
 	public String getTarget() {
 		return target;
 	}
 
+
+
 	public void setTarget(String target) {
 		this.target = target;
 	}
 
-	public float getWeight() {
+
+
+	public Double getWeight() {
 		return weight;
 	}
 
-	public void setWeight(float weight) {
+
+
+	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
-	
-	
+
+
+
+	public String getAttr() {
+		return attr;
+	}
+
+
+
+	public void setAttr(String attr) {
+		this.attr = attr;
+	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -55,7 +71,7 @@ public class Edge {
 		result = prime * result + ((attr == null) ? 0 : attr.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + ((target == null) ? 0 : target.hashCode());
-		result = prime * result + Float.floatToIntBits(weight);
+		result = prime * result + ((weight == null) ? 0 : weight.hashCode());
 		return result;
 	}
 
@@ -83,7 +99,10 @@ public class Edge {
 				return false;
 		} else if (!target.equals(other.target))
 			return false;
-		if (Float.floatToIntBits(weight) != Float.floatToIntBits(other.weight))
+		if (weight == null) {
+			if (other.weight != null)
+				return false;
+		} else if (!weight.equals(other.weight))
 			return false;
 		return true;
 	}

@@ -95,9 +95,8 @@ public class Vertice {
 
 	@Override
 	public String toString() {
-		return "Vertice [name=" + name + ", adjacentV=" + adjacentV
-				+ ", downstreamV=" + downstreamV + ", upstreamV=" + upstreamV
-				+ "]";
+		return   name + "\t" + adjacentV
+				+ "\t" + downstreamV + "\t" + upstreamV;
 	}
 
 
