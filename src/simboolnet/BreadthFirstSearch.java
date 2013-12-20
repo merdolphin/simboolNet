@@ -48,7 +48,6 @@ public class BreadthFirstSearch {
 	}
 
 	public void visitingMarkedQueue(Vertice V) {
-
 		for (String s : V.getAdjacentV()) {
 			if (!bfsVisitedNodes.contains(s)) {
 				qe.add(nodeVertices.get(s));

@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.text.html.HTMLDocument.Iterator;
-
 public class ProcessingPrimaryData {
 
-	private Set<Edge> edges = new HashSet<Edge>();
-	private Set<Vertice> vertices = new HashSet<Vertice>();
-
+	private static Set<Edge> edges = new HashSet<Edge>();
+	private static Set<Vertice> vertices = new HashSet<Vertice>();
+	static Set<String> receptors = new HashSet<String>();
+	static Double virtualEdgeWeight = 1.0;
+	
 	public ProcessingPrimaryData(String filename) throws IOException {
 
 		File infile = new File(filename);
@@ -25,11 +25,12 @@ public class ProcessingPrimaryData {
 		while ((line = br.readLine()) != null) {
 			Edge edge = new Edge(null, null, 0.0, null);
 			String[] temp = line.split(";");
+	
 			edge.setSource(temp[0]);
 			edge.setTarget(temp[1]);
 			edge.setAttr(temp[2]);
+			
 			edges.add(edge);
-
 		}
 
 		for (Edge e : edges) {
@@ -54,57 +55,40 @@ public class ProcessingPrimaryData {
 			vertices.add(vt);
 		}
 		fr.close();
-
-		// Integer flage = 1;
-		//
-		// for(Vertice v : vertices ){
-		// if(v.getName().equals(temp[0])){
-		// flage = 0;
-		// if(! v.getAdjacentV().contains(temp[1]) ){
-		// v.getAdjacentV().add(temp[1]);
-		// if(v.getDownstreamV() != null){
-		// v.getDownstreamV().add(temp[1]);
-		// }else{
-		// Set<String> downstreamTemp = new HashSet<String>();
-		// downstreamTemp.add(temp[1]);
-		// v.setDownstreamV(downstreamTemp);
-		// }
-		// for(Vertice v1 : vertices){
-		// if( v1.getName().equals(temp[1]) ){
-		// if( v1.getUpstreamV() != null && ( !
-		// v1.getUpstreamV().contains(temp[0]) ) ){
-		// v1.getUpstreamV().add(v1.getName());
-		// }
-		// }
-		// }
-		// }
-		// break;
-		// }
-		// }
-		// if(flage == 1){
-		// Vertice node = new Vertice(null, null, null, null);
-		// node.setName(temp[0]);
-		// Set<String> tempv = new HashSet<String>();
-		// tempv.add(temp[1]);
-		// node.setAdjacentV(tempv);
-		// node.setDownstreamV(tempv);
-		// vertices.add(node);
-		//
-		// Vertice nodeT = new Vertice(null, null, null, null);
-		// nodeT.setName(temp[1]);
-		// Set<String> tempvT = new HashSet<String>();
-		// tempvT.add(temp[0]);
-		// nodeT.setAdjacentV(tempvT);
-		// nodeT.setUpstreamV(tempvT);
-		// nodeT.setDownstreamV(null);
-		// vertices.add(nodeT);
-		// }
-		//
-		// }
+		
+		String recepterFileName = "tmp/combined_receptors";
+		File receptorFile = new File(recepterFileName);
+		FileReader frr = new FileReader(receptorFile);
+		BufferedReader breader = new BufferedReader(frr);
+		String receptorline;
+		while ((receptorline = breader.readLine()) != null) {
+			receptors.add(receptorline);
+		}
+		frr.close();
+		
+		add_virtual_node();
 
 		mergeV(vertices);
 	}
 
+
+	public static void add_virtual_node (){
+		
+		Vertice virtualV = new Vertice(null, null, null, null);
+		virtualV.setName("virtualNode");
+		Set<String> adjacentVirtualV = new HashSet<String>();
+		Set<String> downstreamVirtualV = new HashSet<String>();
+		for(String receptor : receptors){
+			Edge tempEdge = new Edge("virtualNode", receptor, virtualEdgeWeight, "+");
+			adjacentVirtualV.add(receptor);
+			downstreamVirtualV.add(receptor);
+			edges.add(tempEdge);
+		}
+		virtualV.setAdjacentV(adjacentVirtualV);
+		virtualV.setDownstreamV(downstreamVirtualV);
+		vertices.add(virtualV);		
+	};
+	
 	public void mergeV(Set<Vertice> v) {
 		Set<String> nodes = new HashSet<String>();
 		Set<Vertice> removeV = new HashSet<Vertice>();
@@ -161,4 +145,8 @@ public class ProcessingPrimaryData {
 	public Set<Vertice> getVertices() {
 		return vertices;
 	}
+	public Set<String> getReceptors() {
+		return receptors;
+	}
+
 }
