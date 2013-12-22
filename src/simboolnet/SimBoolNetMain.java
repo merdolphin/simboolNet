@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
+ */
 
 package simboolnet;
 
@@ -33,10 +33,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 public class SimBoolNetMain extends Thread {
 
@@ -68,7 +68,7 @@ public class SimBoolNetMain extends Thread {
 	static Map<String, Map<String, Double>> mutationCausedSignalChanges = new HashMap<String, Map<String, Double>>();
 
 	static Set<BeingInfluencedNode> beingInfluencedNodesSet = new HashSet<BeingInfluencedNode>();
-	
+
 	public static void main(String[] args) throws Exception {
 
 		edges = new HashSet<Edge>();
@@ -124,39 +124,57 @@ public class SimBoolNetMain extends Thread {
 
 		for (String mutatedNode : mutatedGenes.keySet()) {
 
-			System.out.println("mutation on: " + mutatedNode);
+			//System.out.println("mutation on: " + mutatedNode);
 			br.write("mutation on: " + mutatedNode + "\n");
 
 			Map<String, Double> nodeSingnalChanges = new HashMap<String, Double>();
+
 			for (String node : mutatedEvolve.get(mutatedNode).get(j).keySet()) {
-				
+
 				Double changes = mutatedEvolve.get(mutatedNode).get(j)
 						.get(node)
 						- normalEvolve.get(j).get(node);
-				
+
 				nodeSingnalChanges.put(node, changes);
 
 				if (changes != 0.0 && normalEvolve.get(j).get(node) * 100 != 0) {
-					
-					Map<String, String> tempMap = new HashMap<String, String>();
-					Double changeRatio = changes/normalEvolve.get(j).get(node)*100;
-					
-					if( ! beingInfluencedNodesSet.contains(node)){
-						Map<String,Double> mutatedGeneCausedChangeRatio = new HashMap<String, Double>();
-						mutatedGeneCausedChangeRatio.put(mutatedNode, changeRatio);
-						Set<Map<String,Double>> mutatedSetTemp = new HashSet<Map<String, Double>>();
+
+					Double changeRatio = changes
+							/ normalEvolve.get(j).get(node) * 100;
+
+					if (!beingInfluencedNodesSet.contains(node)) {
+						Map<String, Double> mutatedGeneCausedChangeRatio = new HashMap<String, Double>();
+						mutatedGeneCausedChangeRatio.put(mutatedNode,
+								changeRatio);
+						Set<Map<String, Double>> mutatedSetTemp = new HashSet<Map<String, Double>>();
 						mutatedSetTemp.add(mutatedGeneCausedChangeRatio);
-						BeingInfluencedNode influencedNode = new BeingInfluencedNode(node,mutatedSetTemp);
+						BeingInfluencedNode influencedNode = new BeingInfluencedNode(
+								node, mutatedSetTemp);
 						beingInfluencedNodesSet.add(influencedNode);
-					} else{
-						
+					} else {
+						Map<String, Double> mutatedGeneCausedChangeRatio2 = new HashMap<String, Double>();
+						mutatedGeneCausedChangeRatio2.put(mutatedNode,
+								changeRatio);
+						Iterator<BeingInfluencedNode> iterator = beingInfluencedNodesSet
+								.iterator();
+						while (iterator.hasNext()) {
+							BeingInfluencedNode influencedNodeTemp1 = iterator
+									.next();
+							if (influencedNodeTemp1.getNodeName().equals(node)) {
+								influencedNodeTemp1
+										.getMutationGeneChangesRatio().add(
+												mutatedGeneCausedChangeRatio2);
+							}
+						}
 					}
 
-					System.out.println(node + "\t"
-							+ mutatedEvolve.get(mutatedNode).get(j).get(node)
-							+ "\t" + normalEvolve.get(j).get(node) + "\t"
-							+ +changes + "\t" + changes
-							/ normalEvolve.get(j).get(node) * 100);
+					//System.out.println(beingInfluencedNodesSet);
+
+					// System.out.println(node + "\t"
+					// + mutatedEvolve.get(mutatedNode).get(j).get(node)
+					// + "\t" + normalEvolve.get(j).get(node) + "\t"
+					// + +changes + "\t" + changes
+					// / normalEvolve.get(j).get(node) * 100);
 					br.write(node + "\t"
 							+ mutatedEvolve.get(mutatedNode).get(j).get(node)
 							+ "\t" + normalEvolve.get(j).get(node) + "\t"
@@ -167,6 +185,8 @@ public class SimBoolNetMain extends Thread {
 			mutationCausedSignalChanges.put(mutatedNode, nodeSingnalChanges);
 		}
 		br.close();
+		
+		printMutationNodeDipartiteDate();
 	}
 
 	public static void runNormalSimulation() throws Exception {
@@ -183,6 +203,16 @@ public class SimBoolNetMain extends Thread {
 			normalEvolve.put(i, tempNodeSignal);
 			writeOutputFile(null, i);
 		}
+	}
+
+	public static void printMutationNodeDipartiteDate(){
+		Iterator<BeingInfluencedNode> iterator = beingInfluencedNodesSet.iterator();
+		while(iterator.hasNext()){
+			BeingInfluencedNode tempNode = iterator.next();
+			System.out.println(tempNode.getNodeName() + 
+					"(" + tempNode.getMutationGeneChangesRatio().size() + ")");
+		}
+		
 	}
 
 	public static void forEachMutatedRunAndWrite(String mNode) throws Exception {
